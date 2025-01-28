@@ -19,5 +19,10 @@ const yearOfRelease = (unixTimestamp) => {
     return date.getFullYear()
 }
 
+// set price randomly between $45 and $75
+const generateRandomPrice = () => {
+    return Math.round((Math.random()* (75 - 45) + 45)).toFixed(2)
+}
+
 // export
-module.exports = { mapGameGenres, yearOfRelease }
+module.exports = { mapGameGenres, generateRandomPrice, yearOfRelease }

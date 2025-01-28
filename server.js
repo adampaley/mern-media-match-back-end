@@ -5,7 +5,7 @@ const app = express()
 const mongoose = require('mongoose')
 const logger = require('morgan')
 const cors = require('cors')
-const { mapGameGenres, yearOfRelease } = require('./utility/video-games/utility.js')
+const { mapGameGenres, generateRandomPrice, yearOfRelease } = require('./utility/video-games/utility.js')
 
 // connect to DB
 mongoose.connect(process.env.MONGODB_URI)
@@ -31,7 +31,7 @@ app.post('/', async (req, res) => {
             'Content-Type': 'text/plain'
         }
         
-        const body = 'fields *; limit 500; exclude alternative_names, category, created_at, checksum, dlcs, external_games, game_localizations, game_modes, involved_companies, keywords, platforms, player_perspectives, release_dates, similar_games, tags, themes, updated_at;'
+        const body = `fields *; limit 500; where genres = (8,9);  exclude alternative_names, category, created_at, checksum, dlcs, external_games, game_localizations, game_modes, involved_companies, keywords, platforms, player_perspectives, release_dates, similar_games, tags, themes, updated_at;`
         
         const apiRes = await fetch(BASE_URL, {
             method: 'POST',
@@ -47,7 +47,8 @@ app.post('/', async (req, res) => {
         const transformedData = data.map(game => ({
             ...game,
             genres: Array.isArray(game.genres) ? mapGameGenres(game.genres) : [],
-            first_release_date: yearOfRelease(game.first_release_date)
+            first_release_date: yearOfRelease(game.first_release_date),
+            price: generateRandomPrice()
         }))
 
         res.status(200).json(transformedData)
