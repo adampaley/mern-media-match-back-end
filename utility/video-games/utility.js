@@ -1,4 +1,5 @@
 // imports
+const ageRatings = require('../../public/video-games/age-ratings/age-ratings.js')
 const genres = require('../../public/video-games/genres/genres.js')
 
 // reduce genres to singlue object
@@ -19,10 +20,15 @@ const yearOfRelease = (unixTimestamp) => {
     return date.getFullYear()
 }
 
+// set age ratings randomly
+const generateAgeRating = () => {
+    return ageRatings[Math.round((Math.random()*ageRatings.length))]
+}
+
 // set price randomly between $45 and $75
 const generateRandomPrice = () => {
     return Math.round((Math.random()* (75 - 45) + 45)).toFixed(2)
 }
 
 // export
-module.exports = { mapGameGenres, generateRandomPrice, yearOfRelease }
+module.exports = { mapGameGenres, generateAgeRating, generateRandomPrice, yearOfRelease }
