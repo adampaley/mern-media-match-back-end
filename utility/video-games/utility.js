@@ -10,5 +10,18 @@ const generateRandomPrice = () => {
     return Math.round((Math.random()* (75 - 45) + 45)).toFixed(2)
 }
 
+const genres = require('../../public/video-games/genres/genres.js')
+
+// reduce genres to single object
+const genreMap = genres.reduce((acc, genre) => {
+    acc[genre.name] = genre.id
+    return acc
+}, {})
+
+// replace key with id
+const mapGameGenres = (genreNames) => {
+    return genreNames.map((name) => genreMap[name]) 
+}
+
 // export
-module.exports = { dateOfRelease, generateRandomPrice }
+module.exports = { dateOfRelease, generateRandomPrice, mapGameGenres}
