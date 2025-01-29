@@ -28,25 +28,35 @@ app.use(logger('dev'))
 app.use(cors())
 
 // routes
-const genreNames = ["Arcade"] // seed data
-
 app.post('/', async (req, res) => {
-    const BASE_URL = `https://api.igdb.com/v4/games`
-
+    
       try {
+        const BASE_URL = `https://api.igdb.com/v4/games`
+        
         const headers = {
             'Client-ID': `${process.env.CLIENT_ID}`,
             'Authorization': `Bearer ${process.env.API_KEY}`,            
             'Content-Type': 'text/plain'
         }
+        
+        let genreNames = ''
+        
+        if (req.query) {
+            genreNames = req.query.genres
+        }
 
-        const body = `fields age_ratings.rating, artworks, cover.image_id, first_release_date, genres.name, name, screenshots, slug, storyline, summary, total_rating,  url;  limit 2; where genres = (${mapGameGenres(genreNames).join(',')});`
-    
+        const body = 'fields age_ratings.rating, artworks, cover.image_id, first_release_date, genres.name, name, screenshots, slug, storyline, summary, total_rating,  url;  limit 2;'
+        
+        let newBody = body
+        
+        if (genreNames && genreNames.length > 0) {
+           newBody += ` where genres = (${mapGameGenres([genreNames.split(',')]).join(',')});`
+        }
         
         const apiRes = await fetch(BASE_URL, {
             method: 'POST',
             headers: headers,
-            body: body
+            body: newBody
         })
 
         if (!apiRes.ok) {
