@@ -6,7 +6,7 @@ const verifyToken = require('../middleware/verify-token');
 const User = require('../models/user');
 
 
-// authenticated routes will go here. 
+// authenticated `/user` routes will go here. 
 
 router.get('/', async (req, res) => {
     try {
