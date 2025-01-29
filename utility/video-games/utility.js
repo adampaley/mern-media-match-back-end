@@ -1,3 +1,6 @@
+// import
+const genres = require('../../public/video-games/genres/genres.js')
+
 // convert first-release-date data to show year of release
 const dateOfRelease = (unixTimestamp) => {
     if (!unixTimestamp) return null
@@ -9,8 +12,6 @@ const dateOfRelease = (unixTimestamp) => {
 const generateRandomPrice = () => {
     return Math.round((Math.random()* (75 - 45) + 45)).toFixed(2)
 }
-
-const genres = require('../../public/video-games/genres/genres.js')
 
 // reduce genres to single object
 const genreMap = genres.reduce((acc, genre) => {

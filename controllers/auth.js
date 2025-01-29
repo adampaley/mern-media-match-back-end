@@ -1,3 +1,4 @@
+// import
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
@@ -6,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
 
 const saltRounds = 10;
-
+// routes
 router.post('/sign-up', async (req, res) => {
     try {
         const userInDatabase = await User.User.findOne({ username: req.body.username });
@@ -54,4 +55,5 @@ router.post('/sign-in', async (req, res) => {
     }
 });
 
+// export
 module.exports = router;

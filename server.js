@@ -5,10 +5,10 @@ const app = express()
 const mongoose = require('mongoose')
 const logger = require('morgan')
 const cors = require('cors')
-const { 
+const {   
+    dateOfRelease,
     generateRandomPrice,
-    mapGameGenres,  
-    dateOfRelease 
+    mapGameGenres,
 } = require('./utility/video-games/utility.js')
 //const testJwtRouter = require('./controllers/test-jwt.js');
 const authRouter = require('./controllers/auth.js');
@@ -28,7 +28,7 @@ app.use(logger('dev'))
 app.use(cors())
 
 // routes
-const genreNames = ["Arcade"]
+const genreNames = ["Arcade"] // seed data
 
 app.post('/', async (req, res) => {
     const BASE_URL = `https://api.igdb.com/v4/games`
@@ -76,11 +76,12 @@ app.post('/', async (req, res) => {
       }
 })
 
+// controllers
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 // app.use('/test-jwt', testJwtRouter);
 
-
+// listeners
 app.listen(3000, () => {
   console.log('The express app is ready!')
 })

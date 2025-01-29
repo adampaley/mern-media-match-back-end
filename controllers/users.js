@@ -1,3 +1,4 @@
+// import
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middleware/verify-token');
@@ -36,4 +37,5 @@ router.get('/:userId', verifyToken, async (req, res) => {
     }
 });
 
+// export
 module.exports = router; 
