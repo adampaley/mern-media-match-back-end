@@ -25,6 +25,7 @@ app.use(logger('dev'))
 app.use(cors())
 
 // routes
+
 app.post('/', async (req, res) => {
     const BASE_URL = `https://api.igdb.com/v4/games`
 
@@ -34,8 +35,9 @@ app.post('/', async (req, res) => {
             'Authorization': `Bearer ${process.env.API_KEY}`,            
             'Content-Type': 'text/plain'
         }
-        
-        const body = `fields *, cover.image_id, age_ratings.rating, genres.name; limit 500; exclude alternative_names, category, created_at, checksum, dlcs, external_games, franchise, franchises, game_localizations, game_modes, involved_companies, keywords, platforms, player_perspectives, rating, rating_count, release_dates, similar_games, tags, themes, updated_at;`
+
+        const body = `fields age_ratings.rating, artworks, cover.image_id, first_release_date, genres.name, screenshots, slug, storyline, summary, total_rating,  url;  limit 500; where genres = (8, 11);`
+    
         
         const apiRes = await fetch(BASE_URL, {
             method: 'POST',
@@ -53,7 +55,7 @@ app.post('/', async (req, res) => {
             cover: `images.igdb.com/igdb/image/upload/t_cover_big/${game.cover?.image_id}.jpg`,
             genres: game.genres ?? [],
             media: 'Video Games',
-            parentalRating: game.age_ratings ? `PEGI ${game.age_ratings?.rating}` : 'Not Rated',
+            parentalRating: game.age_ratings ? `PEGI ${game.age_ratings[0].rating}` : 'Not Rated',
             price: generateRandomPrice(),
             releaseDate: game.first_release_date ? dateOfRelease(game.first_release_date) : null,
             storyline: game.storyline ? game.storyline : '',
