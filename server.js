@@ -25,6 +25,7 @@ app.use(logger('dev'))
 app.use(cors())
 
 // routes
+const genreNames = ["Arcade"]
 
 app.post('/', async (req, res) => {
     const BASE_URL = `https://api.igdb.com/v4/games`
@@ -36,7 +37,9 @@ app.post('/', async (req, res) => {
             'Content-Type': 'text/plain'
         }
 
-        const body = `fields age_ratings.rating, artworks, cover.image_id, first_release_date, genres.name, screenshots, slug, storyline, summary, total_rating,  url;  limit 500; where genres = (8, 11);`
+        console.log(mapGameGenres(genreNames))
+
+        const body = `fields age_ratings.rating, artworks, cover.image_id, first_release_date, genres.name, screenshots, slug, storyline, summary, total_rating,  url;  limit 500; where genres = (${mapGameGenres(genreNames).join(',')});`
     
         
         const apiRes = await fetch(BASE_URL, {
