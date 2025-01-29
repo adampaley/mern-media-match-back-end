@@ -7,6 +7,7 @@ const logger = require('morgan')
 const cors = require('cors')
 const {   
     dateOfRelease,
+    generateRandomOffset,
     generateRandomPrice,
     mapGameGenres,
 } = require('./utility/video-games/utility.js')
@@ -45,7 +46,7 @@ app.post('/', async (req, res) => {
             genreNames = req.query.genres
         }
 
-        const body = 'fields age_ratings.rating, artworks, cover.image_id, first_release_date, genres.name, name, screenshots, slug, storyline, summary, total_rating,  url;  limit 2;'
+        const body = `fields age_ratings.rating, artworks, cover.image_id, first_release_date, genres.name, name, screenshots, slug, storyline, summary, total_rating,  url;  limit 2; offset ${generateRandomOffset()};`
         
         let newBody = body
         

@@ -13,6 +13,11 @@ const generateRandomPrice = () => {
     return Math.round((Math.random()* (75 - 45) + 45)).toFixed(2)
 }
 
+// offset query result to simulate random pull
+const generateRandomOffset = () => {
+    return Math.round((Math.random()*500))
+}
+
 // reduce genres to single object
 const genreMap = genres.reduce((acc, genre) => {
     acc[genre.name] = genre.id
@@ -24,5 +29,6 @@ const mapGameGenres = (genreNames) => {
     return genreNames.map((name) => genreMap[name]) 
 }
 
+
 // export
-module.exports = { dateOfRelease, generateRandomPrice, mapGameGenres}
+module.exports = { dateOfRelease, generateRandomOffset, generateRandomPrice, mapGameGenres}
