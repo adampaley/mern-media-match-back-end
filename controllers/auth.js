@@ -30,4 +30,28 @@ router.post('/sign-up', async (req, res) => {
     }
 });
 
+router.post('/sign-in', async (req, res) => {
+    try {
+        const user = await User.User.findOne({ username: req.body.username });
+
+        if (!user) {
+            return res.status(401).json({ err: 'Invalid Credentials' });
+        }
+
+        const checkPassword = bcrypt.compareSync(req.body.password, user.hashedPassword);
+
+        if (!checkPassword) {
+            return res.status(401).json({ err: 'Invalid Credentials' });
+        }
+
+        const payload = { username: user.username, _id: user._id };
+
+        const token = jwt.sign({ payload }, process.env.JWT_SECRET);
+
+        res.status(200).json({ token });
+    } catch (err) {
+        res.status(400).json({ err: err.message });
+    }
+});
+
 module.exports = router;
