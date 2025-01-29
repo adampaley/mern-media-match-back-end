@@ -6,10 +6,9 @@ const mongoose = require('mongoose')
 const logger = require('morgan')
 const cors = require('cors')
 const { 
-    generateAgeRating,
     generateRandomPrice,
     mapGameGenres,  
-    yearOfRelease 
+    dateOfRelease 
 } = require('./utility/video-games/utility.js')
 
 // connect to DB
@@ -36,7 +35,7 @@ app.post('/', async (req, res) => {
             'Content-Type': 'text/plain'
         }
         
-        const body = `fields *; limit 500; where genres = (8,9);  exclude age_ratings, alternative_names, category, created_at, checksum, dlcs, external_games, franchise, franchises, game_localizations, game_modes, involved_companies, keywords, platforms, player_perspectives, rating, rating_count, release_dates, similar_games, tags, themes, updated_at;`
+        const body = `fields *, cover.image_id, age_ratings.rating, genres.name; limit 500; exclude alternative_names, category, created_at, checksum, dlcs, external_games, franchise, franchises, game_localizations, game_modes, involved_companies, keywords, platforms, player_perspectives, rating, rating_count, release_dates, similar_games, tags, themes, updated_at;`
         
         const apiRes = await fetch(BASE_URL, {
             method: 'POST',
@@ -51,14 +50,15 @@ app.post('/', async (req, res) => {
 
         const transformedData = data.map(game => ({
             ...game,
-            age_ratings: `PEGI ${generateAgeRating()}`,
-            first_release_date: yearOfRelease(game.first_release_date),
-            genres: Array.isArray(game.genres) ? mapGameGenres(game.genres) : [],
+            cover: `images.igdb.com/igdb/image/upload/t_cover_big/${game.cover?.image_id}.jpg`,
+            genres: game.genres ?? [],
             media: 'Video Games',
-            price: `$${generateRandomPrice()}`,
-            storyline: game.storyline ? game.storyline : null,
+            parentalRating: game.age_ratings ? `PEGI ${game.age_ratings?.rating}` : 'Not Rated',
+            price: generateRandomPrice(),
+            releaseDate: game.first_release_date ? dateOfRelease(game.first_release_date) : null,
+            storyline: game.storyline ? game.storyline : '',
             summary: game.summary ? game.summary : '',
-            total_rating: `${Math.round(game.total_rating)}%`
+            totalRating: Math.round(game.total_rating)
         }))
 
         res.status(200).json(transformedData)
