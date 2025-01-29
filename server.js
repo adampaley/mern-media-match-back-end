@@ -40,9 +40,7 @@ app.post('/', async (req, res) => {
             'Content-Type': 'text/plain'
         }
 
-        console.log(mapGameGenres(genreNames))
-
-        const body = `fields age_ratings.rating, artworks, cover.image_id, first_release_date, genres.name, screenshots, slug, storyline, summary, total_rating,  url;  limit 500; where genres = (${mapGameGenres(genreNames).join(',')});`
+        const body = `fields age_ratings.rating, artworks, cover.image_id, first_release_date, genres.name, name, screenshots, slug, storyline, summary, total_rating,  url;  limit 2; where genres = (${mapGameGenres(genreNames).join(',')});`
     
         
         const apiRes = await fetch(BASE_URL, {
@@ -60,6 +58,7 @@ app.post('/', async (req, res) => {
             ...game,
             cover: `images.igdb.com/igdb/image/upload/t_cover_big/${game.cover?.image_id}.jpg`,
             genres: game.genres ?? [],
+            title: game.name,
             media: 'Video Games',
             parentalRating: game.age_ratings ? `PEGI ${game.age_ratings[0].rating}` : 'Not Rated',
             price: generateRandomPrice(),
