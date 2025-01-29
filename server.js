@@ -11,6 +11,8 @@ const {
     mapGameGenres,  
     yearOfRelease 
 } = require('./utility/video-games/utility.js')
+//const testJwtRouter = require('./controllers/test-jwt.js');
+const authRouter = require('./controllers/auth.js');
 
 // connect to DB
 mongoose.connect(process.env.MONGODB_URI)
@@ -67,6 +69,9 @@ app.post('/', async (req, res) => {
         res.status(500).json({ message: err.message })
       }
 })
+
+app.use('/auth', authRouter);
+// app.use('/test-jwt', testJwtRouter);
 
 
 app.listen(3000, () => {

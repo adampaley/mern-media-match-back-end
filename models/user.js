@@ -62,6 +62,12 @@ const userSchema = new mongoose.Schema({
 // case-insensitive check on usernames
 userSchema.index({ username: 1 }, { collation: { locale: 'en', strength: 2 } })
 
+userSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        delete returnedObject.hashedPassword;
+    }
+});
+
 // register
 const Cart = mongoose.model('Cart', cartSchema)
 const Setting = mongoose.model('Setting', settingSchema)
