@@ -45,13 +45,13 @@ app.post('/', async (req, res) => {
         if (req.query) {
             genreNames = req.query.genres
         }
-
+        
         const body = `fields age_ratings.rating, artworks, cover.image_id, first_release_date, genres.name, name, screenshots, slug, storyline, summary, total_rating,  url;  limit 2; offset ${generateRandomOffset()};`
         
         let newBody = body
-        
+
         if (genreNames && genreNames.length > 0) {
-           newBody += ` where genres = (${mapGameGenres([genreNames.split(',')]).join(',')});`
+           newBody += ` where genres = (${mapGameGenres(genreNames.split(',')).join(',')});`
         }
         
         const apiRes = await fetch(BASE_URL, {
