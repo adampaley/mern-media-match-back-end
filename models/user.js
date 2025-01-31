@@ -63,9 +63,9 @@ userSchema.index({ username: 1 }, { collation: { locale: 'en', strength: 2 } })
 
 userSchema.set('toJSON', {
     transform: (document, returnedObject) => {
-        delete returnedObject.hashedPassword;
+        delete returnedObject.hashedPassword
     }
-});
+})
 
 // register
 const Cart = mongoose.model('Cart', cartSchema)
