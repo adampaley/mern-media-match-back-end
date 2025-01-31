@@ -65,9 +65,6 @@ router.get('/:userId/settings', verifyToken, async (req, res) => {
 // POST /users/:userId/settings
 router.post('/:userId/settings', verifyToken, async (req, res) => {
     try {
-        console.log('req.path', req.path)
-        console.log('req.user', req.user)
-        console.log('req.params', req.params)
         if (req.user._id !== req.params.userId) {
             return res.status(403).json({ err: "Unauthorized" })
         }        
