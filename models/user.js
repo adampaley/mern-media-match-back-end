@@ -17,6 +17,7 @@ const settingSchema = new mongoose.Schema({
 
 // cart schema
 const cartSchema = new mongoose.Schema({
+    id: Number,
     media: {
         type: String,
         enum: ['Books', 'Music', 'Movies', 'TV', 'VideoGames']

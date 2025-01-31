@@ -7,8 +7,8 @@ const logger = require('morgan')
 const cors = require('cors')
 
 //const testJwtRouter = require('./controllers/test-jwt.js');
-const authRouter = require('./controllers/auth.js');
-const userRouter = require('./controllers/users.js');
+const authRouter = require('./controllers/auth.js')
+const userRouter = require('./controllers/users.js')
 const apiRouter = require('./controllers/api.js')
 
 // connect to DB
@@ -26,8 +26,8 @@ app.use(cors())
 
 
 // controllers
-app.use('/auth', authRouter);
-app.use('/users', userRouter);
+app.use('/auth', authRouter)
+app.use('/users', userRouter)
 app.use('/api', apiRouter)
 // app.use('/test-jwt', testJwtRouter);
 
