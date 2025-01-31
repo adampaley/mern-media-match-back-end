@@ -4,58 +4,36 @@ const router = express.Router()
 const verifyToken = require('../middleware/verify-token')
 const { User, Setting } = require('../models/user')
 
-// routes
-// index all users
-// GET /users
-router.get('/', async (req, res) => {
-    try {
-        // Get a list of all users, but only return their username and _id
-        const users = await User.find({}, "username")
 
-        res.json(users)
-    } catch (err) {
-        res.status(500).json({ err: err.message })
-    }
-})
 
-// pulls individual user information
-// GET /users/:userId/settings
-router.get('/:userId', verifyToken, async (req, res) => {
-    try {
-        if (req.user._id !== req.params.userId) {
-            return res.status(403).json({ err: "Unauthorized" })
-        }
-
-        const user = await User.findById(req.params.userId)
-
-        if (!user) {
-            return res.status(404).json({ err: 'User not found.' })
-        }
-
-        res.status(200).json({ user })
-    } catch (err) {
-        res.status(500).json({ err: err.message })
-    }
-})
 
 // settings routes
-// find existing user settings
-// GET /users/:userId/settings
-router.get('/:userId/settings', verifyToken, async (req, res) => {
+// create settings if none have previously been saved
+// POST /users/:userId/settings
+router.post('/', verifyToken, async (req, res) => {
     try {
+        console.log('req.path', req.path)
+        console.log('req.user', req.user)
+        console.log('req.params', req.params)
         if (req.user._id !== req.params.userId) {
             return res.status(403).json({ err: "Unauthorized" })
         }        
 
+        const newSetting = new Setting(req.body)
         const user = await User.findById(req.params.userId)
 
         if (!user) {
             return res.status(404).json({ err: 'User not found.' })
         }
 
-        const savedSettings = user.settings || []
+        if (user.settings.length > 0) {
+            return res.status(400).json({ err: "User already has settings. Please update using the PUT route."})
+        }
 
-        res.status(200).json({ settings: savedSettings })
+        user.settings.push(newSetting)
+        await user.save()
+
+        res.json({ settings: user.settings })
     } catch (err) {
         res.status(500).json({ err: err.message })
     }
@@ -64,7 +42,7 @@ router.get('/:userId/settings', verifyToken, async (req, res) => {
 // update existing settings
 // PUT /users/:userId/settings
 
-router.put('/:userId/settings', verifyToken, async (req, res) => {
+router.put('/', verifyToken, async (req, res) => {
     try {
         if (req.user._id !== req.params.userId) {
             return res.status(403).json({ err: "Unauthorized" })
@@ -89,9 +67,10 @@ router.put('/:userId/settings', verifyToken, async (req, res) => {
 
         await user.save()
 
-        res.status(200).json({ settings: user.settings })
+        res.json({ settings: user.settings })
     } catch (err) {
         res.status(500).json({ err: err.message })
+        
     }
 })
 
