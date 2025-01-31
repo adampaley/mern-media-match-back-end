@@ -67,9 +67,9 @@ app.post('/', async (req, res) => {
 
         const transformedData = data.map(game => ({
             ...game,
-            cover: `images.igdb.com/igdb/image/upload/t_cover_big/${game.cover?.image_id}.jpg`,
+            cover: `http://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover?.image_id}.jpg`,
             genres: game.genres ?? [],
-            title: game.name,
+            title: game.name ?? "Untitled",
             media: 'Video Games',
             parentalRating: game.age_ratings ? `PEGI ${game.age_ratings[0].rating}` : 'Not Rated',
             price: generateRandomPrice(),
