@@ -10,7 +10,6 @@ const settingSchema = new mongoose.Schema({
     },
     genre: {
         type: [String],
-        required: true
     },
     earliestRelease: Date,
     latestRelease: Date,
