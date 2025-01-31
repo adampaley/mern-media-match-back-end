@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 })
 
 // pulls individual user information
-// GET /users/:userId/settings
+// GET /users/:userId
 router.get('/:userId', verifyToken, async (req, res) => {
     try {
         if (req.user._id !== req.params.userId) {
@@ -61,9 +61,36 @@ router.get('/:userId/settings', verifyToken, async (req, res) => {
     }
 })
 
+// create settings if none have previously been saved
+// POST /users/:userId/settings
+router.post('/:userId/settings', verifyToken, async (req, res) => {
+    try {
+        if (req.user._id !== req.params.userId) {
+            return res.status(403).json({ err: "Unauthorized" })
+        }        
+
+        const newSetting = new Setting(req.body)
+        const user = await User.findById(req.params.userId)
+
+        if (!user) {
+            return res.status(404).json({ err: 'User not found.' })
+        }
+
+        if (user.settings.length > 0) {
+            return res.status(400).json({ err: "User already has settings. Please update using the PUT route."})
+        }
+
+        user.settings.push(newSetting)
+        await user.save()
+
+        res.status(200).json({ settings: user.settings })
+    } catch (err) {
+        res.status(500).json({ err: err.message })
+    }
+})
+
 // update existing settings
 // PUT /users/:userId/settings
-
 router.put('/:userId/settings', verifyToken, async (req, res) => {
     try {
         if (req.user._id !== req.params.userId) {
