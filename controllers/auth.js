@@ -4,19 +4,19 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const User = require('../models/user.js');
+const { User } = require('../models/user.js');
 
 const saltRounds = 10;
 // routes
 router.post('/sign-up', async (req, res) => {
     try {
-        const userInDatabase = await User.User.findOne({ username: req.body.username });
+        const userInDatabase = await User.findOne({ username: req.body.username });
 
         if (userInDatabase) {
             return res.status(409).json({ err: 'Invalid Sign Up Information'});
         }
 
-        const user = await User.User.create({
+        const user = await User.create({
             username: req.body.username,
             hashedPassword: bcrypt.hashSync(req.body.password, saltRounds)
         });
@@ -33,7 +33,7 @@ router.post('/sign-up', async (req, res) => {
 
 router.post('/sign-in', async (req, res) => {
     try {
-        const user = await User.User.findOne({ username: req.body.username });
+        const user = await User.findOne({ username: req.body.username });
 
         if (!user) {
             return res.status(401).json({ err: 'Invalid Credentials' });

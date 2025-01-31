@@ -2,9 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middleware/verify-token');
-
 const User = require('../models/user');
-
 
 // authenticated `/user` routes will go here. 
 
@@ -36,6 +34,15 @@ router.get('/:userId', verifyToken, async (req, res) => {
         res.status(500).json({ err: err.message });
     }
 });
+
+// settings routes
+router.post('/:userId/settings', verifyToken, async (req, res) => {
+    try {
+        res.send('Hello, you are testing the settings')
+    } catch (err) {
+        res.status(500).json({ err: err.message})
+    }
+})
 
 // export
 module.exports = router; 
