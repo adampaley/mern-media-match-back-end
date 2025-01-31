@@ -70,7 +70,7 @@ app.post('/', async (req, res) => {
             cover: `http://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover?.image_id}.jpg`,
             genres: game.genres ?? [],
             title: game.name ?? "Untitled",
-            media: 'Video Games',
+            media: 'Video_Games',
             parentalRating: game.age_ratings ? `PEGI ${game.age_ratings[0].rating}` : 'Not Rated',
             price: generateRandomPrice(),
             releaseDate: game.first_release_date ? dateOfRelease(game.first_release_date) : null,

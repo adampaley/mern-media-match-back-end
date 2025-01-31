@@ -29,7 +29,7 @@ const reviewSchema = new mongoose.Schema({
 const productSchema = new mongoose.Schema({
     media: {
         type: String,
-        enum: ['Video Games']
+        enum: ['Video_Games']
     },
     title: String,
     genre: [String],

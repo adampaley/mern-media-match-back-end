@@ -20,7 +20,7 @@ const settingSchema = new mongoose.Schema({
 const cartSchema = new mongoose.Schema({
     media: {
         type: String,
-        enum: ['Books', 'Music', 'Movies', 'TV', 'Video Games']
+        enum: ['Books', 'Music', 'Movies', 'TV', 'Video_Games']
     },
     title: String,
     genre: [String],
