@@ -6,11 +6,10 @@ const settingSchema = new mongoose.Schema({
     media: { 
         type: [String], 
         required: true, 
-        enum: ['Video Games']
+        enum: ['VideoGames']
     },
     genre: {
         type: [String],
-        required: true
     },
     earliestRelease: Date,
     latestRelease: Date,
@@ -20,7 +19,7 @@ const settingSchema = new mongoose.Schema({
 const cartSchema = new mongoose.Schema({
     media: {
         type: String,
-        enum: ['Books', 'Music', 'Movies', 'TV', 'Video Games']
+        enum: ['Books', 'Music', 'Movies', 'TV', 'VideoGames']
     },
     title: String,
     genre: [String],
