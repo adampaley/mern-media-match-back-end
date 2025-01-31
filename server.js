@@ -60,24 +60,24 @@ app.post('/', async (req, res) => {
             body: newBody
         })
 
-    if (!apiRes.ok) {
-      throw new Error(`API Request failed with status: ${apiRes.status}`)
-    }
-    const data = await apiRes.json()
+        if (!apiRes.ok) {
+            throw new Error(`API Request failed with status: ${apiRes.status}`)
+        }
+        const data = await apiRes.json()
 
-    const transformedData = data.map(game => ({
-      ...game,
-      cover: `images.igdb.com/igdb/image/upload/t_cover_big/${game.cover?.image_id}.jpg`,
-      genres: game.genres ?? [],
-      title: game.name,
-      media: 'Video Games',
-      parentalRating: game.age_ratings ? `PEGI ${game.age_ratings[0].rating}` : 'Not Rated',
-      price: generateRandomPrice(),
-      releaseDate: game.first_release_date ? dateOfRelease(game.first_release_date) : null,
-      storyline: game.storyline ? game.storyline : '',
-      summary: game.summary ? game.summary : '',
-      totalRating: Math.round(game.total_rating)
-    }))
+        const transformedData = data.map(game => ({
+            ...game,
+            cover: `http://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover?.image_id}.jpg`,
+            genres: game.genres ?? [],
+            title: game.name ?? "Untitled",
+            media: 'Video Games',
+            parentalRating: game.age_ratings ? `PEGI ${game.age_ratings[0].rating}` : 'Not Rated',
+            price: generateRandomPrice(),
+            releaseDate: game.first_release_date ? dateOfRelease(game.first_release_date) : null,
+            storyline: game.storyline ? game.storyline : '',
+            summary: game.summary ? game.summary : '',
+            totalRating: Math.round(game.total_rating)
+        }))
 
     res.status(200).json(transformedData)
   } catch (err) {
