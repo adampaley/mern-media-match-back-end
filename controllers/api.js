@@ -27,7 +27,7 @@ router.post('/games', async (req, res) => {
             genreNames = req.query.genres
         }
 
-        const body = `fields age_ratings.rating, artworks, cover.image_id, first_release_date, genres.name, name, screenshots, slug, storyline, summary, total_rating,  url;  limit 2; offset ${generateRandomOffset()};`
+        const body = `fields age_ratings.rating, artworks, cover.image_id, first_release_date, genres.name, name, screenshots, slug, storyline, summary, total_rating,  url;  limit 4; offset ${generateRandomOffset()};`
 
         let newBody = body
 
