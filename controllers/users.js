@@ -66,11 +66,6 @@ router.get('/', verifyToken, async (req, res) => {
     }
 })
 
-// const {user} ...
-// createSettings (user._id)
-// settingSerivce (parameter === user._id)
-// 
-
 // create settings if none have previously been saved
 // POST /settings
 router.post('/', verifyToken, async (req, res) => {
