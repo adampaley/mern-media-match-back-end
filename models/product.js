@@ -25,11 +25,12 @@ const reviewSchema = new mongoose.Schema({
     { timestamps: true} 
 )
 
-// cart schema
+// product schema
 const productSchema = new mongoose.Schema({
+    id: Number,
     media: {
         type: String,
-        enum: ['VideoGames']
+        enum: ['Books', 'Music', 'Movies', 'TV', 'VideoGames']
     },
     title: String,
     genre: [String],
@@ -39,6 +40,10 @@ const productSchema = new mongoose.Schema({
     image: String,
     releaseDate: Date,
     totalRating: Number,
+    owners: {
+        type: [ mongoose.Schema.Types.ObjectId ],
+        ref: 'User'
+    },
     reviews: [reviewSchema],
 })
 

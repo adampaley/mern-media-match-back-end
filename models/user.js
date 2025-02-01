@@ -6,7 +6,7 @@ const settingSchema = new mongoose.Schema({
     media: { 
         type: [String], 
         required: true, 
-        enum: ['VideoGames']
+        enum: ['Books', 'Music', 'Movies', 'TV', 'VideoGames']
     },
     genre: {
         type: [String],
