@@ -45,7 +45,7 @@ router.post('/', verifyToken, async (req, res) => {
             return res.status(409).json({ err: "User already has settings. Please update using the PUT route."})
         }
     
-        const newSetting = new Setting(req.body)
+        const newSetting = new Setting(req.body.settings)
         user.settings.push(newSetting)
         await user.save()
 
