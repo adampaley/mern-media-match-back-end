@@ -5,21 +5,15 @@ const verifyToken = require('../middleware/verify-token')
 const { User, Setting } = require('../models/user')
 
 
-
-
 // settings routes
 // create settings if none have previously been saved
 // POST /users/:userId/settings
 router.post('/', verifyToken, async (req, res) => {
     try {
-        console.log('req.path', req.path)
-        console.log('req.user', req.user)
-        console.log('req.params', req.params)
         if (req.user._id !== req.params.userId) {
             return res.status(403).json({ err: "Unauthorized" })
         }        
-
-        const newSetting = new Setting(req.body)
+        
         const user = await User.findById(req.params.userId)
 
         if (!user) {
@@ -30,6 +24,7 @@ router.post('/', verifyToken, async (req, res) => {
             return res.status(400).json({ err: "User already has settings. Please update using the PUT route."})
         }
 
+        const newSetting = new Setting(req.body)
         user.settings.push(newSetting)
         await user.save()
 

@@ -8,7 +8,9 @@ const cors = require('cors')
 
 const apiRouter = require('./controllers/api.js')
 const authRouter = require('./controllers/auth.js')
-// const settingRouter = require('./controllers/settings.js')
+const cartRouter = require('./controllers/carts.js')
+const productRouter = require('./controllers/products.js')
+const settingRouter = require('./controllers/settings.js')
 // const testJwtRouter = require('./controllers/test-jwt.js')
 const userRouter = require('./controllers/users.js')
 
@@ -28,9 +30,11 @@ app.use(cors())
 // controllers
 app.use('/api', apiRouter)
 app.use('/auth', authRouter)
+app.use('/carts', cartRouter)
+app.use('/products', productRouter)
+app.use('/settings', settingRouter)
 // app.use('/test-jwt', testJwtRouter)
 app.use('/users', userRouter)
-// app.use('/users/:userId/settings', settingRouter)
 
 // listeners
 app.listen(3000, () => {
