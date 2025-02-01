@@ -9,11 +9,11 @@ const { User, Setting } = require('../models/user')
 // GET /settings
 router.get('/', verifyToken, async (req, res) => {
     try {
-        if (req.user._id !== req.body.userId) {
+        if (req.user._id !== req.headers.userid) { // all keys in headers automitcally made lowercase
             return res.status(403).json({ err: "Unauthorized" })
         }        
 
-        const user = await User.findById(req.body.userId)
+        const user = await User.findById(req.headers.userid)
 
         if (!user) {
             return res.status(404).json({ err: 'User not found.' })
