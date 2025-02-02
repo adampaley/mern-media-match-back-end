@@ -44,7 +44,7 @@ router.post('/', verifyToken, async (req, res) => {
         }
         
         const cartItem = new Cart(req.body.cart)
-        console.log(cartItem)
+
         const alreadyInCart = user.cart.filter((item) => item.id === cartItem.id)        
         if (alreadyInCart.length > 0) {
             return res.status(409).json({ err: "Item already in cart."})
