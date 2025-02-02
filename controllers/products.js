@@ -62,7 +62,7 @@ router.post('/', verifyToken, async (req, res) => {
     }
 })
 
-// update existing product with new owner
+// update existing product with new owner or remove if owner removes from their library
 // PUT /products/:productId
 router.put('/:productId', verifyToken, async (req, res) => {
     try {
@@ -97,6 +97,20 @@ router.put('/:productId', verifyToken, async (req, res) => {
 
 // review routes
 
+// index reviews
+// GET /products/:productId/reviews
+
+// submit a review
+// POST /products/:productId/reviews
+
+// see your review
+// GET /products/:productId/reviews/:reviewId
+
+// edit your review
+// PUT /products/:productId/reviews/:reviewId
+
+// delete your review
+// DELETE /products/:productId/reviews/:reviewId
 
 // export
 module.exports = router

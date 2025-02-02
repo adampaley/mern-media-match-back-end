@@ -27,7 +27,6 @@ const cartSchema = new mongoose.Schema({
     summary: String,
     storyline: String,
     parentalRating: String,
-    image: String, // why this and cover?
     releaseDate: Date,
     totalRating: Number,
     price: Number,
