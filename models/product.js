@@ -33,7 +33,7 @@ const productSchema = new mongoose.Schema({
         enum: ['Books', 'Music', 'Movies', 'TV', 'VideoGames']
     },
     title: String,
-    genre: [String],
+    genres: [Object],
     summary: String,
     storyline: String,
     parentalRating: String,

@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const verifyToken = require('../middleware/verify-token')
 const { Product, Review } = require('../models/product')
 const { User } = require('../models/user')
+const { ObjectId } = require('bson')
 
 // product routes
 // index all items stored in product database
@@ -46,6 +47,7 @@ router.post('/', verifyToken, async (req, res) => {
         const newProduct = new Product({
             id: req.body.cart.id,
             media: req.body.cart.media,
+            genres: req.body.cart.genres || [],
             cover: req.body.cart.cover || null,
             summary: req.body.cart.summary || null, 
             storyline: req.body.cart.storyline || null,
@@ -77,7 +79,7 @@ router.put('/:productId', verifyToken, async (req, res) => {
         
         const user = await User.findById(req.body.userId)
         const storedProduct = await Product.findById(req.params.productId)
-
+        
         if (!storedProduct) {
             return res.status(404).json({ err: 'Product not found.' })
         }
@@ -110,10 +112,17 @@ router.put('/:productId', verifyToken, async (req, res) => {
 
 // index reviews for a specific product
 // GET /products/:productId/reviews
+
+// This is good code if we want to see all reviews for a specific game
 router.get('/:productId/reviews', verifyToken, async (req, res) => {
     try {
-        const products = await Product.find()
+        const products = await Product.findById(req.params.productId).populate('reviews.author', 'username')
 
+        if (!products || products.reviews.length === 0) {
+            return res.status(404).json({ err: 'No reviews found.'})
+        }
+
+        res.status(200).json(products.reviews)
     } catch (err) {
         res.status(500).json({ err: err.message })
     }
@@ -123,34 +132,70 @@ router.get('/:productId/reviews', verifyToken, async (req, res) => {
 // POST /products/:productId/reviews
 router.post('/:productId/reviews', verifyToken, async (req, res) => {
     try {
-        
+
+        const product = await Product.findById(req.params.productId)
+        if (!product) {
+            return res.status(404).json({ err: 'Product not found.' })
+        }
+
+        const user = User.findById(req.body.userId)
+
+        const owner = new ObjectId(req.body.userId)
+        console.log(owner)
+
+        if (!product.owners.includes(owner)) {
+            return res.status(403).json({ err: "Need to purchase item." })
+        }
+
+        const existingReview = product.reviews.find(review => review.author.toString() === req.body.userId)
+        if (existingReview) {
+            return res.status(409).json({ err: "Already reviewed."})
+        }
+
+        const review = new Review({
+            text: req.body.text,
+            author: req.body.userId,
+        })
+
+        product.reviews.push(review)
+        await product.save()
+
+        res.status(201).json({ review })
     } catch (err) {
         res.status(500).json({ err: err.message })
     }
 })
-
 
 // see your review
 // GET /products/:productId/reviews/:reviewId
 router.get('/:productId/reviews/:reviewId', verifyToken, async (req, res) => {
     try {
+        const product = await Product.findById(req.params.productId)
+
+        if (!product) {
+            return res.status(404).json({ err: 'Product not found.'})
+        }
+
+        const review = product.reviews.find(review => review._id.toString() === req.params.reviewId)
         
+        if (!review) {
+            return res.status(404).json({ err: 'Review not found.'})
+        }
+        res.status(200).json({ review })
     } catch (err) {
         res.status(500).json({ err: err.message })
     }
 })
-
 
 // edit your review
 // PUT /products/:productId/reviews/:reviewId
 router.put('/:productId/reviews/:reviewId', verifyToken, async (req, res) => {
     try {
-        
+
     } catch (err) {
         res.status(500).json({ err: err.message })
     }
 })
-
 
 // delete your review
 // DELETE /products/:productId/reviews/:reviewId
@@ -161,7 +206,6 @@ router.delete('/:productId/reviews/:reviewId', verifyToken, async (req, res) => 
         res.status(500).json({ err: err.message })
     }
 })
-
 
 // export
 module.exports = router
