@@ -31,6 +31,7 @@ const cartSchema = new mongoose.Schema({
     releaseDate: Date,
     totalRating: Number,
     price: Number,
+    cover: String,
 })
 
 // user schema 
