@@ -62,7 +62,6 @@ router.post('/', verifyToken, async (req, res) => {
 router.delete('/:cartItemId', verifyToken, async (req,res) => {
     try {
         const user = await User.findById(req.headers.userid)
-        console.log(user)
         user.cart.remove({ _id: req.params.cartItemId})
         await user.save()
         res.status(200).json({message: 'cart item deleted'})
