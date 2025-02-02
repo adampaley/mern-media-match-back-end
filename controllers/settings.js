@@ -10,7 +10,7 @@ const { User, Setting } = require('../models/user')
 router.get('/', verifyToken, async (req, res) => {
     try {
         if (req.user._id !== req.headers.userid) { // all keys in headers automitcally made lowercase
-            return res.status(403).json({ err: "Unauthorized" })
+            return res.status(403).json({ err: "Unauthorized." })
         }        
 
         const user = await User.findById(req.headers.userid)
@@ -32,7 +32,7 @@ router.get('/', verifyToken, async (req, res) => {
 router.post('/', verifyToken, async (req, res) => {
     try {
         if (req.user._id !== req.body.userId) {
-            return res.status(403).json({ err: "Unauthorized" })
+            return res.status(403).json({ err: "Unauthorized." })
         }        
 
         const user = await User.findById(req.body.userId)
@@ -60,7 +60,7 @@ router.post('/', verifyToken, async (req, res) => {
 router.put('/', verifyToken, async (req, res) => {
     try {
         if (req.user._id !== req.body.userId) {
-            return res.status(403).json({ err: "Unauthorized" })
+            return res.status(403).json({ err: "Unauthorized." })
         }      
 
         const user = await User.findById(req.body.userId)

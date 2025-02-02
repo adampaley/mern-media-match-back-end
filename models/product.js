@@ -37,7 +37,7 @@ const productSchema = new mongoose.Schema({
     summary: String,
     storyline: String,
     parentalRating: String,
-    image: String,
+    cover: String,
     releaseDate: Date,
     totalRating: Number,
     owners: {

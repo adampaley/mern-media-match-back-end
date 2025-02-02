@@ -10,10 +10,10 @@ const saltRounds = 10
 // routes
 router.post('/sign-up', async (req, res) => {
     try {
-        const userInDatabase = await User.findOne({ username: req.body.username });
+        const userInDatabase = await User.findOne({ username: req.body.username })
 
         if (userInDatabase) {
-            return res.status(409).json({ err: 'Invalid Sign Up Information'})
+            return res.status(409).json({ err: 'Invalid sign up information.'})
         }
 
         const user = await User.create({
@@ -36,13 +36,13 @@ router.post('/sign-in', async (req, res) => {
         const user = await User.findOne({ username: req.body.username })
 
         if (!user) {
-            return res.status(401).json({ err: 'Invalid Credentials' })
+            return res.status(401).json({ err: 'Invalid credentials.' })
         }
 
         const checkPassword = bcrypt.compareSync(req.body.password, user.hashedPassword)
 
         if (!checkPassword) {
-            return res.status(401).json({ err: 'Invalid Credentials' })
+            return res.status(401).json({ err: 'Invalid credentials.' })
         }
 
         const payload = { username: user.username, _id: user._id }
