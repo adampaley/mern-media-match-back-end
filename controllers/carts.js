@@ -12,7 +12,7 @@ const { Cart, User } = require('../models/user')
 router.get('/', verifyToken, async (req, res) => {
     try {
         if (req.user._id !== req.headers.userid) {
-            return res.status(403).json({ err: "Unauthorized" })
+            return res.status(403).json({ err: "Unauthorized." })
         }
 
         const user = await User.findById(req.headers.userid) 
@@ -34,7 +34,7 @@ router.get('/', verifyToken, async (req, res) => {
 router.post('/', verifyToken, async (req, res) => {
     try {
         if (req.user._id !== req.body.userId) {
-            return res.status(403).json({ err: "Unauthorized" })
+            return res.status(403).json({ err: "Unauthorized." })
         }
 
         const user = await User.findById(req.body.userId) 
@@ -64,7 +64,7 @@ router.delete('/:cartItemId', verifyToken, async (req,res) => {
         const user = await User.findById(req.headers.userid)
         user.cart.remove({ _id: req.params.cartItemId})
         await user.save()
-        res.status(200).json({message: 'cart item deleted'})
+        res.status(200).json({message: 'Removed cart item.'})
     } catch (err) {
         res.status(500).json({ err: err.message })
     }
