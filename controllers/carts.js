@@ -29,6 +29,8 @@ router.get('/', verifyToken, async (req, res) => {
     }
 })
 
+
+
 router.post('/', verifyToken, async (req, res) => {
     try {
         if (req.user._id !== req.body.userId) {
@@ -60,7 +62,7 @@ router.post('/', verifyToken, async (req, res) => {
 router.delete('/:cartItemId', verifyToken, async (req,res) => {
     try {
         const user = await User.findById(req.headers.userid)
-        const cartItem = user.cart.id(req.params.cartItemId)
+        console.log(user)
         user.cart.remove({ _id: req.params.cartItemId})
         await user.save()
         res.status(200).json({message: 'cart item deleted'})
