@@ -11,14 +11,18 @@ const { User } = require('../models/user')
 // GET /products
 router.get('/', verifyToken, async (req, res) => {
     try {
-        // Get a list of all users, but only return their username and _id
-        const allPurchasedProducts = await Product.find()
 
-        if (allPurchasedProducts.length === 0) {
+        if (!req.body.userId) {
+            return res.status(404).json({ err: 'No user information.'})
+        }
+
+        const allUserProducts = await Product.find({ owners: req.body.userId })
+
+        if (allUserProducts.length === 0) {
             return res.status(404).json({ err: 'No products found.' })
         }
 
-        res.status(200).json(allPurchasedProducts)
+        res.status(200).json(allUserProducts)
     } catch (err) {
         res.status(500).json({ err: err.message })
     }
@@ -51,12 +55,13 @@ router.post('/', verifyToken, async (req, res) => {
             totalRating: req.body.cart.totalRating || null,
             owners: user._id
         })
-
         await newProduct.save()
 
-        res.status(200).json({ product: newProduct })
-        
+        user.library.push(newProduct._id)
+        await user.save()
 
+        res.status(200).json({ product: newProduct })
+    
     } catch (err) {
         res.status(500).json({ err: err.message })        
     }
@@ -70,6 +75,7 @@ router.put('/:productId', verifyToken, async (req, res) => {
             return res.status(400).json({ err: 'User information not provided.'})
         }
         
+        const user = await User.findById(req.body.userId)
         const storedProduct = await Product.findById(req.params.productId)
 
         if (!storedProduct) {
@@ -81,10 +87,15 @@ router.put('/:productId', verifyToken, async (req, res) => {
                 { _id: req.params.productId }, 
                 { $pull: { owners: req.body.userId } }
             )
-            console.log(storedProduct.owners)
+            await User.updateOne(
+                { _id: req.body.userId }, 
+                { $pull: { library: req.params.productId } }
+            )
         } else {
             storedProduct.owners.push(req.body.userId)
             await storedProduct.save()
+            user.library.push(storedProduct._id)
+            await user.save()
         }
 
         const updatedProduct = await Product.findById(req.params.productId)
@@ -97,20 +108,60 @@ router.put('/:productId', verifyToken, async (req, res) => {
 
 // review routes
 
-// index reviews
+// index reviews for a specific product
 // GET /products/:productId/reviews
+router.get('/:productId/reviews', verifyToken, async (req, res) => {
+    try {
+        const products = await Product.find()
+
+    } catch (err) {
+        res.status(500).json({ err: err.message })
+    }
+})
 
 // submit a review
 // POST /products/:productId/reviews
+router.post('/:productId/reviews', verifyToken, async (req, res) => {
+    try {
+        
+    } catch (err) {
+        res.status(500).json({ err: err.message })
+    }
+})
+
 
 // see your review
 // GET /products/:productId/reviews/:reviewId
+router.get('/:productId/reviews/:reviewId', verifyToken, async (req, res) => {
+    try {
+        
+    } catch (err) {
+        res.status(500).json({ err: err.message })
+    }
+})
+
 
 // edit your review
 // PUT /products/:productId/reviews/:reviewId
+router.put('/:productId/reviews/:reviewId', verifyToken, async (req, res) => {
+    try {
+        
+    } catch (err) {
+        res.status(500).json({ err: err.message })
+    }
+})
+
 
 // delete your review
 // DELETE /products/:productId/reviews/:reviewId
+router.delete('/:productId/reviews/:reviewId', verifyToken, async (req, res) => {
+    try {
+        
+    } catch (err) {
+        res.status(500).json({ err: err.message })
+    }
+})
+
 
 // export
 module.exports = router
