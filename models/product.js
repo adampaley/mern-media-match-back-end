@@ -3,10 +3,14 @@ const mongoose = require('mongoose')
 
 // review schema 
 const reviewSchema = new mongoose.Schema({
-    text: String,
+    text: {
+        type: String,
+        required: true
+    },
     author: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     starRating: {
         type: Number,

@@ -31,7 +31,6 @@ router.get('/', verifyToken, async (req, res) => {
 // POST /reviews
 router.post('/', verifyToken, async (req, res) => {
     try {
-
         const product = await Product.findById(req.body.productId)
         if (!product) {
             return res.status(404).json({ err: 'Product not found.' })
