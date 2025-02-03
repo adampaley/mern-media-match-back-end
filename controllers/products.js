@@ -13,11 +13,11 @@ const { ObjectId } = require('bson')
 router.get('/', verifyToken, async (req, res) => {
     try {
 
-        if (!req.body.userId) {
+        if (!req.headers.userid) {
             return res.status(404).json({ err: 'No user information.'})
         }
 
-        const allUserProducts = await Product.find({ owners: req.body.userId })
+        const allUserProducts = await Product.find({ owners: req.headers.userid })
 
         if (allUserProducts.length === 0) {
             return res.status(404).json({ err: 'No products found.' })
