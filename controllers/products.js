@@ -45,17 +45,17 @@ router.post('/', verifyToken, async (req, res) => {
         const user = await User.findById(req.body.userId)
 
         const newProduct = new Product({
+            cover: req.body.cart.cover || null,
+            genres: req.body.cart.genres || [],
             id: req.body.cart.id,
             media: req.body.cart.media,
-            genres: req.body.cart.genres || [],
-            cover: req.body.cart.cover || null,
-            summary: req.body.cart.summary || null, 
-            storyline: req.body.cart.storyline || null,
+            owners: user._id,
             parentalRating: req.body.cart.parentalRating || null,
-            cover: req.body.cart.cover || null,
             releaseDate: req.body.cart.releaseDate || null,
+            storyline: req.body.cart.storyline || null,
+            summary: req.body.cart.summary || null, 
+            title: req.body.cart.title || "Untitled",
             totalRating: req.body.cart.totalRating || null,
-            owners: user._id
         })
         await newProduct.save()
 
@@ -141,7 +141,6 @@ router.post('/:productId/reviews', verifyToken, async (req, res) => {
         const user = User.findById(req.body.userId)
 
         const owner = new ObjectId(req.body.userId)
-        console.log(owner)
 
         if (!product.owners.includes(owner)) {
             return res.status(403).json({ err: "Need to purchase item." })
