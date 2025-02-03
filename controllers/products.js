@@ -181,6 +181,11 @@ router.get('/:productId/reviews/:reviewId', verifyToken, async (req, res) => {
         if (!review) {
             return res.status(404).json({ err: 'Review not found.'})
         }
+
+        if (review.author.toString() !== req.headers.userid) {
+            return res.status(403).json({ err: 'You did not write this.'})
+        }
+
         res.status(200).json({ review })
     } catch (err) {
         res.status(500).json({ err: err.message })
@@ -191,7 +196,22 @@ router.get('/:productId/reviews/:reviewId', verifyToken, async (req, res) => {
 // PUT /products/:productId/reviews/:reviewId
 router.put('/:productId/reviews/:reviewId', verifyToken, async (req, res) => {
     try {
+        const product = await Product.findById(req.params.productId)
 
+        if (!product) {
+            return res.status(404).json({ err: 'Product not found.' })
+        }
+
+        const review = product.reviews.find(review => review._id.toString() === req.params.reviewId)
+        
+        if (!review || review.author._id.toString() !== req.body.userId) {
+            return res.status(404).json({ err: 'No review found or not the author.'})
+        }
+
+        review.text = req.body.text || review.text
+
+        await product.save()
+        res.status(200).json({ review })
     } catch (err) {
         res.status(500).json({ err: err.message })
     }
