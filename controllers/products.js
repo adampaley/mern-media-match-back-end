@@ -17,11 +17,7 @@ router.get('/', verifyToken, async (req, res) => {
             return res.status(404).json({ err: 'No user information.'})
         }
 
-        const allUserProducts = await Product.find({ owners: req.headers.userid })
-
-        if (allUserProducts.length === 0) {
-            return res.status(404).json({ err: 'No products found.' })
-        }
+        const allUserProducts = await Product.find({ owners: req.headers.userid }) 
 
         res.status(200).json(allUserProducts)
     } catch (err) {
