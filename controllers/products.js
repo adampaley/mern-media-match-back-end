@@ -221,7 +221,21 @@ router.put('/:productId/reviews/:reviewId', verifyToken, async (req, res) => {
 // DELETE /products/:productId/reviews/:reviewId
 router.delete('/:productId/reviews/:reviewId', verifyToken, async (req, res) => {
     try {
-        
+        const product = await Product.findById(req.params.productId)
+
+        if (!product) {
+            return res.status(404).json({ err: 'Product not found.' })
+        }
+
+        const review = product.reviews.find(review => review._id.toString() === req.params.reviewId)
+        console.log('p', product)
+
+        if (!review || review.author._id.toString() !== req.headers.userid) {
+            return res.status(404).json({ err: 'No review found or not the author.'})
+        }
+        product.reviews.remove({ _id: req.params.reviewId })
+        await product.save()
+        res.status(200).json({ message: "Review deleted." })
     } catch (err) {
         res.status(500).json({ err: err.message })
     }
