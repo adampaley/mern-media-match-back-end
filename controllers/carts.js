@@ -29,8 +29,6 @@ router.get('/', verifyToken, async (req, res) => {
     }
 })
 
-
-
 router.post('/', verifyToken, async (req, res) => {
     try {
         if (req.user._id !== req.body.userId) {

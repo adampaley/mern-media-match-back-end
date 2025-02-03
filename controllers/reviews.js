@@ -42,7 +42,7 @@ router.get('/', verifyToken, async (req, res) => {
             return res.status(404).json({ err: 'No review found for this user.' })
         }
 
-        res.status(200).json({ text: userReview.text, author: userReview.author.username})
+        res.status(200).json({ text: userReview.text, author: userReview.author.username, id: userReview._id })
     } catch (err) {
         res.status(500).json({ err: err.message })
     }
