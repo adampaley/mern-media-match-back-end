@@ -3,6 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
+const port = process.env.PORT ? process.env.PORT : "3000" 
 const logger = require('morgan')
 const cors = require('cors')
 
@@ -39,6 +40,6 @@ app.use('/settings', settingRouter)
 app.use('/users', userRouter)
 
 // listeners
-app.listen(3000, () => {
-  console.log('The express app is ready!')
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`)
 })
