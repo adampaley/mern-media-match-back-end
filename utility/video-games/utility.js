@@ -29,6 +29,5 @@ const mapGameGenres = (genreNames) => {
     return genreNames.map((name) => genreMap[name]) 
 }
 
-
 // export
-module.exports = { dateOfRelease, generateRandomOffset, generateRandomPrice, mapGameGenres}
+module.exports = { dateOfRelease, generateRandomOffset, generateRandomPrice, mapGameGenres }
