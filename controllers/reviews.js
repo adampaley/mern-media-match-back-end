@@ -6,40 +6,22 @@ const verifyToken = require('../middleware/verify-token')
 const { Product, Review } = require('../models/product')
 const { User } = require('../models/user')
 const { ObjectId } = require('bson')
+const { getReviews } = require('../utility/video-games/utility')
 
 // review routes
-
-// index reviews for a specific product
-// GET /reviews
-
-// This is good code if we want to see all reviews for a specific game
-// router.get('/', verifyToken, async (req, res) => {
-//     try {
-//         const products = await Product.findById(req.headers.productid).populate('reviews.author', 'username')
-
-//         if (!products || products.reviews.length === 0) {
-//             return res.status(404).json({ err: 'No reviews found.'})
-//         }
-
-//         res.status(200).json(products.reviews)
-//     } catch (err) {
-//         res.status(500).json({ err: err.message })
-//     }
-// })
-
 // GET /reviews
 router.get('/', verifyToken, async (req, res) => {
     try {
         const products = await Product.findById(req.headers.productid).populate('reviews.author', 'username')
 
         if (!products || products.reviews.length === 0) {
-            return res.status(404).json({ err: 'No reviews found.'})
+            return res.status(204)
         }
 
         const userReview = products.reviews.find(review => review.author._id.toString() === req.user._id);
 
         if (!userReview) {
-            return res.status(404).json({ err: 'No review found for this user.' })
+            return res.status(204)
         }
 
         res.status(200).json({ text: userReview.text, author: userReview.author.username, id: userReview._id })
@@ -47,7 +29,6 @@ router.get('/', verifyToken, async (req, res) => {
         res.status(500).json({ err: err.message })
     }
 })
-
 
 // submit a review
 // POST /reviews
@@ -83,50 +64,25 @@ router.post('/', verifyToken, async (req, res) => {
     }
 })
 
-// see your review
-// GET /reviews/:reviewId
-// router.get('/:reviewId', verifyToken, async (req, res) => {
-//     try {
-//         const product = await Product.findById(req.headers.productid)
-
-//         if (!product) {
-//             return res.status(404).json({ err: 'Product not found.'})
-//         }
-
-//         const review = product.reviews.find(review => review._id.toString() === req.params.reviewId)
-        
-//         if (!review) {
-//             return res.status(404).json({ err: 'Review not found.'})
-//         }
-
-//         if (review.author.toString() !== req.user._id) {
-//             return res.status(403).json({ err: 'You did not write this.'})
-//         }
-
-//         res.status(200).json({ review })
-//     } catch (err) {
-//         res.status(500).json({ err: err.message })
-//     }
-// })
-
 // edit your review
 // PUT /reviews/:reviewId
-router.put('/:reviewId', verifyToken, async (req, res) => {
+router.put('/', verifyToken, async (req, res) => {
     try {
-        const product = await Product.findById(req.body.productId)
+        const products = await Product.findById(req.body.productId).populate('reviews.author', 'username')
 
-        if (!product) {
-            return res.status(404).json({ err: 'Product not found.' })
+        if (!products || products.reviews.length === 0) {
+            return res.status(404).json({ err: 'No reviews found.'})
         }
 
-        const review = product.reviews.find(review => review._id.toString() === req.params.reviewId)
-        if (!review || review.author._id.toString() !== req.user._id) {
+        const review = products.reviews.find(review => review.author._id.toString() === req.user._id);
+
+        if (review.author._id.toString() !== req.user._id) {
             return res.status(404).json({ err: 'No review found or not the author.'})
         }
 
         review.text = req.body.text || review.text
 
-        await product.save()
+        await products.save()
         res.status(200).json({ review })
     } catch (err) {
         res.status(500).json({ err: err.message })
@@ -135,26 +91,29 @@ router.put('/:reviewId', verifyToken, async (req, res) => {
 
 // delete your review
 // DELETE /:reviewId
-router.delete('/:reviewId', verifyToken, async (req, res) => {
+router.delete('/', verifyToken, async (req, res) => {
     try {
-        const product = await Product.findById(req.headers.productid)
-        
-        if (!product) {
-            return res.status(404).json({ err: 'Product not found.' })
+        const products = await Product.findById(req.headers.productid).populate('reviews.author', 'username')
+
+        if (!products || products.reviews.length === 0) {
+            return res.status(404).json({ err: 'No reviews found.'})
         }
 
-        const review = product.reviews.find(review => review._id.toString() === req.params.reviewId)
+        const review = products.reviews.find(review => review.author._id.toString() === req.user._id);
 
-        if (!review || review.author._id.toString() !== req.user._id) {
+        if (review.author._id.toString() !== req.user._id) {
             return res.status(404).json({ err: 'No review found or not the author.'})
         }
-        product.reviews.remove({ _id: req.params.reviewId })
-        await product.save()
+
+        products.reviews.remove({ _id: review._id })
+        await products.save()
         res.status(200).json({ message: "Review deleted." })
     } catch (err) {
         res.status(500).json({ err: err.message })
     }
 })
+
+
 
 // export
 module.exports = router
