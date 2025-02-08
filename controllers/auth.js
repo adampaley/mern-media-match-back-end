@@ -10,6 +10,14 @@ const saltRounds = 10
 // routes
 router.post('/sign-up', async (req, res) => {
     try {
+        if (req.body.username.length < 5) {
+            return res.status(400).json({ err: 'Username must be at least 5 charachters long' })
+        } 
+
+        if (req.body.passwprd.length < 6) {
+            return res.status(400).json({ err: 'Password must be at least 6 charachters long' })
+        } 
+
         const usernameRequirements = /^[a-zA-Z0-9_]+$/
 
         if (!usernameRequirements.test(req.body.username)) {
