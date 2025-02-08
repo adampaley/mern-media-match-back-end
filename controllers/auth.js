@@ -18,6 +18,10 @@ router.post('/sign-up', async (req, res) => {
             return res.status(400).json({ err: 'Password must be at least 6 charachters long' })
         } 
 
+        if (req.body.password !== req.body.passwordConfirm) {
+            return res.status(400).json({ err: 'Passwords do not match.' })
+        }
+
         const usernameRequirements = /^[a-zA-Z0-9_]+$/
 
         if (!usernameRequirements.test(req.body.username)) {
