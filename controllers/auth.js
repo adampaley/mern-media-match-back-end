@@ -14,7 +14,7 @@ router.post('/sign-up', async (req, res) => {
             return res.status(400).json({ err: 'Username must be at least 5 charachters long' })
         } 
 
-        if (req.body.passwprd.length < 6) {
+        if (req.body.password.length < 6) {
             return res.status(400).json({ err: 'Password must be at least 6 charachters long' })
         } 
 
