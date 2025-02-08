@@ -10,6 +10,12 @@ const saltRounds = 10
 // routes
 router.post('/sign-up', async (req, res) => {
     try {
+        const usernameRequirements = /^[a-zA-Z0-9_]+$/
+
+        if (!usernameRequirements.test(req.body.username)) {
+            return res.status(400).json({ err: 'Username can only contain letters, numbers, and underscores.'})
+        }
+
         const userInDatabase = await User.findOne({ username: { $regex: new RegExp(`^${req.body.username}$`, 'i')}});
 
         if (userInDatabase) {
